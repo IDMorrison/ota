@@ -24,6 +24,16 @@ public class Vuelo {
     }
 
     @Override
+    public String toString() {
+        return "Vuelo{" +
+                "origen='" + origen + '\'' +
+                ", fecha=" + fecha +
+                ", destino='" + destino + '\'' +
+                ", proveedor='" + proveedor + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
