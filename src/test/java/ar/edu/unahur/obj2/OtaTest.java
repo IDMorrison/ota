@@ -44,7 +44,31 @@ public class OtaTest {
     @org.testng.annotations.Test
     public void testBuscarVuelos() {
 
-        List<Proveedor> proveedores = Stream.of(worldspanAdapter).collect(Collectors.toList());
+        List<Proveedor> proveedores = Stream.of(sabreAdapter)
+                .collect(Collectors.toList());
+
+        DistribuidorDeTrafico distribuidorDeTrafico = new DistribuidorDeTrafico(proveedores);
+
+        Ota ota = new Ota(distribuidorDeTrafico);
+
+        DateTime fecha = new DateTime("2019-12-13");
+
+        // Pido vuelos a traves de la plataforma Ota (El unico proveedor cargado es Sabre).
+        List<Vuelo> vuelo1 = ota.buscarVuelos(fecha, "BUE", "MIA");
+
+        // Pido vuelo directamente al proveedor Sabre sin usar adaptadores.
+        List<Vuelo> vuelo3 = sabre.buscar(fecha, "BUE","MIA");
+
+        //Comparo ambos vuelos.
+        Assert.assertEquals(vuelo1, vuelo3);
+    }
+
+
+    @org.testng.annotations.Test
+    public void testReservar() {
+
+        List<Proveedor> proveedores = Stream.of(amadeusAdapter, sabreAdapter)
+                .collect(Collectors.toList());
 
         DistribuidorDeTrafico distribuidorDeTrafico = new DistribuidorDeTrafico(proveedores);
 
@@ -53,33 +77,13 @@ public class OtaTest {
         DateTime fecha = new DateTime("2019-12-13");
 
         List<Vuelo> vuelos = ota.buscarVuelos(fecha, "BUE", "MIA");
-        List<Vuelo> vuelos1 = ota.buscarVuelos(fecha, "BUE", "NYC");
-
-        Assert.assertEquals(vuelos1, vuelos);
-
-
-
-
-    }
-
-    /*
-    @org.testng.annotations.Test
-    public void testReservar() {
-        DistribuidorDeTrafico distribuidorDeTrafico = new DistribuidorDeTrafico();
-        Ota ota = new Ota(distribuidorDeTrafico);
-
-        DateTime fecha = new DateTime("2019-12-13");
-
-
-        List<Vuelo> vuelos = ota.buscarVuelos(fecha, "BUE", "MIA");
 
         Vuelo elegido =  vuelos.get(0);
+
         Set<Pasajero> pasajeros = Stream.of(new Pasajero("Juan", "Pérez", 40)).collect(Collectors.toSet());
 
         Boleto boleto = ota.reservar(elegido, pasajeros );
 
-        assertEquals(boleto.getVuelo(), elegido);
-
-
-    }*/
+        Assert.assertEquals(boleto.getVuelo(), elegido);
+    }
 }

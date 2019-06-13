@@ -40,5 +40,4 @@ public class Amadeus {
 
         return new Boleto(vueloAVender, pasajeros);
     }
-
 }
